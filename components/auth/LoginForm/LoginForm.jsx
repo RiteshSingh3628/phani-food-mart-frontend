@@ -9,8 +9,14 @@ import Button from "@/components/common/Button";
 import { LOGIN_DEFAULT_VALUES, LOGIN_SCHEMA } from "@/lib/constants/auth/validationSchema";
 import PasswordInput from "@/components/common/PasswordInput";
 import ClickableLink from "@/components/common/ClickableLink";
+import { useTransition } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 
 const LoginForm = () => {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const {
     register,
     handleSubmit,
@@ -20,15 +26,27 @@ const LoginForm = () => {
     defaultValues: LOGIN_DEFAULT_VALUES,
   });
 
-  const onSubmit = async (data) => {
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Login Data:", data);
-      toast.success("Login Successful!");
-    } catch (error) {
-      toast.error("Failed to login. Please try again.");
-    }
+  const onSubmit = (data) => {
+    startTransition(async () => {
+      try {
+        const result = await signIn("credentials", {
+          email: data.email,
+          password: data.password,
+          redirect: false,
+        });
+
+        if (result?.ok) {
+          toast.success("Login successful");
+          router.push("/"); // Or dashboard, etc.
+          router.refresh();
+        } else {
+          toast.error("Invalid credentials or error occurred");
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("Something went wrong. Please try again.");
+      }
+    });
   };
 
   return (
@@ -59,8 +77,8 @@ const LoginForm = () => {
           />
         </div>
 
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Logging in..." : "Indulge"}
+        <Button type="submit" disabled={isPending}>
+          {isPending ? "Logging in..." : "Indulge"}
         </Button>
       </form>
     </div>
