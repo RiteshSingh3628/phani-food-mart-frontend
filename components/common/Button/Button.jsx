@@ -9,7 +9,7 @@ const Button = ({ children, type = "button", className = "", ...props }) => {
       type={type}
       className={`
         w-full bg-[#EAAA2A] hover:bg-[#d49925] text-black font-semibold py-3 rounded-md
-        transition-colors duration-200 flex items-center justify-center gap-2 mt-2
+        transition-colors duration-200 flex cursor-pointer items-center justify-center gap-2 mt-2
         ${className}
       `}
       {...props}
