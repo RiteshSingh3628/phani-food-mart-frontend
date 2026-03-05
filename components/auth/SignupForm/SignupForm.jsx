@@ -8,26 +8,32 @@ import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
 import { SIGNUP_SCHEMA, SIGNUP_DEFAULT_VALUES } from "@/lib/constants/auth/validationSchema";
 import PasswordInput from "@/components/common/PasswordInput";
+import { useTransition } from "react";
+import { signUp } from "@/framework/server-actions/auth/action";
+import { useRouter } from "next/navigation";
+import ROUTES_PATH from "@/lib/constants/routePaths";
 
 const SignupForm = () => {
+    const router = useRouter();
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm({
         resolver: zodResolver(SIGNUP_SCHEMA),
         defaultValues: SIGNUP_DEFAULT_VALUES,
     });
-
+    const [isPending, startTransition] = useTransition();
     const onSubmit = async (data) => {
-        try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            console.log("Signup Data:", data);
-            toast.success("Signup Successful!");
-        } catch (error) {
-            toast.error("Failed to sign up. Please try again.");
-        }
+        startTransition(async () => {
+            const response = await signUp(data);
+            if (response.success) {
+                toast.success(response.message);
+                router.push(ROUTES_PATH.LOGIN);
+            } else {
+                toast.error(response.message);
+            }
+        })
     };
 
     return (
@@ -39,7 +45,7 @@ const SignupForm = () => {
                     placeholder="Enter your full name"
                     icon={User}
                     error={errors.name?.message}
-                    {...register("name")}
+                    {...register("fullName")}
                 />
                 <Input
                     label="EMAIL ADDRESS"
@@ -57,8 +63,8 @@ const SignupForm = () => {
                     register={register("password")}
                 />
 
-                <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Signing up..." : "Indulge"}
+                <Button type="submit" disabled={isPending}>
+                    {isPending ? "Signing up..." : "Indulge"}
                 </Button>
             </form>
         </div>
