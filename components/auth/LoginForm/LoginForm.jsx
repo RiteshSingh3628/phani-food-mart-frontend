@@ -37,7 +37,7 @@ const LoginForm = () => {
 
         if (result?.ok) {
           toast.success("Login successful");
-          router.push("/"); // Or dashboard, etc.
+          router.push("/home"); // Or dashboard, etc.
           router.refresh();
         } else {
           toast.error("Invalid credentials or error occurred");
