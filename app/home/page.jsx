@@ -1,4 +1,5 @@
 import Carousel from "@/components/common/Carousel";
+import MarqueeStrip from "@/components/common/MarqueeStrip";
 
 const dummyData = [
     {
@@ -29,6 +30,20 @@ const dummyData = [
     },
 ];
 
+const items = [
+    "Imported Chocolates 🍫",
+    "Premium Coffee ☕",
+    "Dry Fruits 🌰",
+    "Indian Sweets 🍬",
+    "Festival Specials 🎁",
+  ];
+
 export default function Home() {
-    return <div><Carousel data={dummyData} activeSlide={2} /></div>;
+    return <div>
+        <Carousel data={dummyData} activeSlide={2} />
+        <MarqueeStrip data={items} />
+        <div className="w-full h-96 bg-red-50">
+
+        </div>
+    </div>;
 }
