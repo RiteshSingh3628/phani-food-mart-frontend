@@ -97,23 +97,6 @@ export default function Carousel (props) {
       </div>
       </div>
       {/* carousel */}
-
-      <div className="btns">
-        {/* <FontAwesomeIcon
-          className="btn"
-          onClick={prev}
-          icon={faChevronLeft}
-          color="#fff"
-          size="2x"
-        />
-        <FontAwesomeIcon
-          className="btn"
-          onClick={next}
-          icon={faChevronRight}
-          color="#fff"
-          size="2x"
-        /> */}
-      </div>
     </>
   );
 };
